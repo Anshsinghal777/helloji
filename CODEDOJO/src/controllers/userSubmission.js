@@ -1,4 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
+import dotenv from 'dotenv';
+dotenv.config();
+
 
 import Problem from "../models/problem.js";
 import Submission from "../models/submission.js";
@@ -170,15 +173,26 @@ console.log(req.body);
      
      
      
-       
-const ai = new GoogleGenAI({apiKey : "AIzaSyDPkdCYIXnJP6jCzQP6l0kc4LSJoWIgCxQ"});
+const apiKey = process.env.GCP_API_KEY;
+
+const ai = new GoogleGenAI({ apiKey });
+
 
 async function main() {
-  const response = await ai.models.generateContent({
-    model: "gemini-2.5-flash",
-    contents: message,
-    config: {
-      systemInstruction:` You are Nexi, a friendly and extremely flirty (but respectful and mannerful) lady chatbot of a coding platform called CodeDojo.
+
+  const inputText = Array.isArray(message)
+  ? message
+      .filter(m => m.parts)
+      .flatMap(m => m.parts)
+      .filter(p => p.text)
+      .map(p => p.text)
+      .join("\n")
+  : message;
+  const interaction = await ai.interactions.create({
+     model:  "gemini-2.5-flash", 
+    
+    
+      system_instruction:` You are Nexi, a friendly and extremely flirty (but respectful and mannerful) lady chatbot of a coding platform called CodeDojo.
 
      
 
@@ -284,11 +298,12 @@ You enjoy helping  and flirting with programmers improve step by step.
 
 
 
-`
-    },
+`,
+    
+     input: inputText,
   });
-  res.status(200).json({message : response.text});
-  console.log(response.text);
+  res.status(200).json({message : interaction.output_text});
+  console.log(interaction.output_text);
 }
 
 await main();

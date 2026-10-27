@@ -300,7 +300,7 @@ Navigate(`/update-problem/${problemId}`);
         <div className="mb-8 text-center">
         <h1 className={`text-3xl md:text-4xl font-bold mb-2 ${darkMode ? 'text-white' : 'text-gray-800'}`} style={{ fontFamily: 'sans-serif' }}>
   {user?.role === 'admin' 
-    ? `Welcome Mr Ansh Singhal to your Codedojo`
+    ? `Welcome Mr ${user?.firstName} to your Codedojo`
     : `Welcome ${user?.firstName} `
   }
 </h1>
