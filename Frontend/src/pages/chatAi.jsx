@@ -22,7 +22,7 @@ function ChatAi({ problem, code , emailID }) {
   }, [messages, isLoading]);
 
   const onSubmit = async (data) => {
-    if (!data.message.trim()) return;
+   if (!data.message?.trim()) return;
 
     const newMsg = { role: "user", parts: [{ text: data.message }] };
     const newMessages = [...messages, newMsg];
@@ -48,7 +48,7 @@ function ChatAi({ problem, code , emailID }) {
       ]);
 
     } catch (error) {
-      console.error("Chat API error:", error);
+      console.error("Chat API error:", error.response?.data || error.message);
       setMessages((prev) => [
         ...prev,
         { role: "model", parts: [{ text: "Something went wrong." }] },
